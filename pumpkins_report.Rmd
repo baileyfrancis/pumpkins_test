@@ -16,13 +16,34 @@ library(tidyverse)
 
 Write some text here about what you are doing. Show the code for reading in the `pumpkins.csv` file.
 
+**Answer:**
+I am going to load in the pumpkins.csv file from my current working directory and assign it to an object called `pumpkins`
+
 ```{r code_block1}
-# add some code
+pumpkins <- read.csv('./pumpkins.csv', header = TRUE)
 ```
 
 ## Converting weights
 
 Write a **function** to alter the weight in pounds to kg. Demonstrate the code below. Then convert the weight and create **a new** column called `weight_kg`
+
+
+**Answer:**
+*Note:* There are 2.2 pounds in 1 kg
+
+```{r kg_function}
+#Create lbs to kg function
+kg <- function(x){
+  x/2.2
+}
+
+#Convert the weights 
+kg_convert <- kg(pumpkins$weight_lbs)
+
+#Create a new column with this conversion 
+pumpkins$weight_kg <- kg_convert
+```
+
 
 ## A pumpkin plot
 
@@ -30,9 +51,28 @@ Here I want you to plot the relationship between the actual weight and the estim
 
 **Also** explain what the plot shows and whether there are outliers
 
+**Answer:**
+This is a plot illustrating the relationship between estimated weight (lbs) and actual weight (lbs) of our pumpkins.
+
+```{r pumpkins_plot}
+ggplot(pumpkins, aes(weight_lbs, est_weight)) + geom_point()
+```
+
+In general, as actual weight increases, estimated weight increases. There are outliers in this plot, however. For example, there are numerous pumpkins with weights that far exceed their estimated weight. Conversely, there are also two pumpkins that have significantly lower weights than estimated. 
+
 ## Some pumpkin queries
 
 Which pumpkin is the heaviest? Where was it grown and in what year? Show the code below and make sure you return **only the top hit** - nb. `print(n = 1)` will help here.
+
+**Answer:**
+```{r heaviest, eval=FALSE}
+pumpkins %>%
+  group_by(country, id, weight_lbs) %>%
+  arrange(desc(weight_lbs)) %>%
+  print(n = 1)
+```
+
+The heaviest pumpkin weighs 2703 lbs. It was grown in Tuscany, Italy in 2021
 
 ## Pumpkins in the US and UK
 
